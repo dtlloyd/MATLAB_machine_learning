@@ -22,11 +22,16 @@ tb = uicontrol(fig, 'Style', 'togglebutton', 'String', 'Stop'); % create...
 thresh = 0.1 % propbability threshold for sucessfull detection
 
 while tb.Value == 0 % exits loop when button is pressed
+    
     drawnow
     picture = camera.snapshot; % grab webcam image
     picture = imresize(picture,[227,227]); % AlexNet likes 227 x 227
+    
     image(picture) % show web cam image
+    
     [label, prob] = classify(nnet, picture); % identify object in image
+    
+    # if classification probability above threshold print label
     if max(prob)>=thresh
         title(['Object identified: ' char(label)]);
     else
@@ -35,7 +40,7 @@ while tb.Value == 0 % exits loop when button is pressed
     daspect([1 1 1])
     set(gca,'xtick',[],'ytick',[])
     
-    % if there is a cat in the picture praise the lord
+    % if there is a cat in the picture play a pleasant sound
     if contains(char(label),'cat')
         sound(S(2).y,S(2).Fs)
     end
